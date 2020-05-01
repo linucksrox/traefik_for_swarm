@@ -1,0 +1,56 @@
+global:
+  checkNewVersion: false
+  sendAnonymousUsage: false
+
+api:
+  insecure: false
+  dashboard: true
+  debug: false
+
+serversTransport:
+  insecureSkipVerify: false
+
+log:
+  level: ERROR
+  filePath: "/logs/traefik.log"
+  format: common
+
+providers:
+  docker:
+    watch: true
+    exposedByDefault: false
+    swarmMode: true
+  file:
+    watch: true
+    directory: "./routing"
+
+entryPoints:
+  web:
+    address: ":80"
+    forwardedHeaders:
+      insecure: true
+  websecure:
+    address: ":443"
+    forwardedHeaders:
+      trustedIPs:
+        - "127.0.0.1/32"
+  traefik:
+    address: ":8080"
+  other:
+    address: ":8081"
+
+certificatesResolvers:
+  exampledomain:
+    acme:
+# Comment out caServer to use production servers
+#      caServer: "https://acme-staging-v02.api.letsencrypt.org/directory"
+      email: certbot@exampledomain.com
+      storage: "/letsencrypt/acme.json"
+      dnsChallenge:
+        provider: cloudflare
+        delayBeforeCheck: 60
+        resolvers:
+# Use internal resolver if no direct access to public DNS (also necessary in this case to set a delayBeforeCheck greater than 0)
+          - "192.168.1.31:53"
+#          - "1.1.1.1:53"
+#          - "8.8.8.8:53"

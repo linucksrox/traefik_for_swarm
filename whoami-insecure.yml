@@ -1,0 +1,26 @@
+version: '3.7'
+
+services:
+  whoami-insecure:
+    image: containous/whoami
+    networks:
+      - traefik-public
+    deploy:
+      labels:
+        - "traefik.enable=true"
+        - "traefik.docker.network=traefik-public"
+# `whoami-insecure` is the router name, listening on `web` whis just the name for http connections
+        - "traefik.http.routers.whoami-insecure.entrypoints=web"
+        - "traefik.http.routers.whoami-insecure.rule=Host(`whoami-insecure.exampledomain.com`)"
+# Define which port to connect to the service on (backend)
+        - "traefik.http.services.whoami-insecure.loadbalancer.server.port=80"
+# Session stickiness (stick user to a specific replica once they open a session)
+        - "traefik.http.services.whoami-insecure.loadbalancer.sticky=true"
+        - "traefik.http.services.whoami-insecure.loadbalancer.sticky.cookie.httponly=true"
+        - "traefik.http.services.whoami-insecure.loadbalancer.sticky.cookie.secure=true"
+        # - "traefik.http.services.whoami-insecure.loadbalancer.sticky.cookie.name=foobar"
+
+networks:
+  traefik-public:
+    external: true
+    name: traefik-public

@@ -1,0 +1,23 @@
+version: '3.7'
+
+services:
+  whoami-secure:
+    image: containous/whoami
+    networks:
+      - traefik-public
+    deploy:
+      labels:
+        - "traefik.enable=true"
+        - "traefik.docker.network=traefik-public"
+# Handle secure traffic (requires a separate frontend router for TLS)
+# `whoami-secure` is the router name for TLS connections listening on `websecure` or https connections
+        - "traefik.http.routers.whoami-secure.entrypoints=websecure"
+        - "traefik.http.routers.whoami-secure.rule=Host(`whoami-secure.exampledomain.com`)"
+        - "traefik.http.routers.whoami-secure.tls=true"
+# Define which port to connect to the service on (backend)
+        - "traefik.http.services.whoami-secure.loadbalancer.server.port=80"
+
+networks:
+  traefik-public:
+    external: true
+    name: traefik-public

@@ -1,0 +1,11 @@
+tls:
+  stores:
+    default:
+      defaultCertificate:
+        certFile: /etc/traefik/ssl/exampledomain.com.bundle.crt
+        keyFile: /etc/traefik/ssl/exampledomain.com.key
+
+# Additional certifications, optional
+#  certificates:
+#    - certFile: /etc/traefik/ssl/exampledomain2.com.crt
+#      keyFile: /etc/traefik/ssl/exampledomain2.com.key
