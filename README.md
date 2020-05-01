@@ -34,7 +34,7 @@ sudo chmod 440 ./ssl/*
 ```
 docker stack deploy traefik -c stack.yml
 ```
-* Check that you can access the Traefik dashboard at http://traefik.example.com:8080/dashboard/#/
+* Check that you can access the Traefik dashboard at http://traefik.exampledomain.com:8080/dashboard/#/
 
 ## Notes on redirection
 Redirection from http to https is done through a router + middleware. This is currently defined on the traefik container right in stack.yml, so **any** traffic coming in on http will be permanently redirected to https (HTTP 302). If necessary, you could place individual router + middlware redirects on each container if you want to do this per service (and remove the global redirect on the traefik container). Another option is to have alternative entry points on different ports (like the birtreports entrypoint) so you can access services without redirecting to https.
